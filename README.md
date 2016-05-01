@@ -18,18 +18,18 @@ This will start and run the development server where the application can be visi
 
 ```
 http://localhost:8080
-``` 
+```
 
 and the [admin application](#admin-application) can be visited at:
 
 ```
 http://localhost:8000
-``` 
+```
 
 ### Admin Application
 The Google App Engine SDK comes with an admin application and is started whenever your application is started using
-the development web server mentioned above. You can access this admin application by 
-visiting `http://localhost:8000`. One of the main and usefull feature of the admin panel is 
+the development web server mentioned above. You can access this admin application by
+visiting `http://localhost:8000`. One of the main and usefull feature of the admin panel is
 the **Datastore Viewer** which presents the different kinds and entities belonging to your application datamodel.
 It is important to notice that the Datastore Viewer only presents those kinds that has at least one entity.
 
@@ -76,32 +76,48 @@ when writting code for this project.
 ## Tests
 The following section describes how to run and add tests to this project.
 
-### Running Tests
-In order to run the tests, you must first start your development web server. By visiting the following
-URL, you run all the tests and the result will be displayed using 
-[GAEUnit](https://code.google.com/p/gaeunit/) (Google App Engine Unit Test Framework).
+### Running the Tests
+In order to run the tests while developing, install [nose](https://nose.readthedocs.org/en/latest/), i.e.
 
-```
-http://localhost:8080/tests
+```bash
+$ pip install nose
 ```
 
-You can also run a specific test case by specifying the python module name in the URL, e.g.:
+and add the [NoseGAE](https://pypi.python.org/pypi/NoseGAE) plugin, i.e.:
 
+```bash
+$ pip install nosegae
 ```
-http://localhost:8080/tests?name=test_factories
+
+Make sure that the path to the `google_appengine` directory is added to `PYTHONPATH`. From the
+`fiziq-backend` directory run the following command in order to run the tests:
+
+```bash
+$ nosetests -w src/ --with-gae
 ```
+
+You should see something similar to:
+
+    ....................................
+    ----------------------------------------------------------------------
+    Ran 36 tests in 6.051s
+
+    OK
+
+whenever all the tests are run without any errors. If there are errors or failures, you will get
+a more detailed description about them.
 
 ### Adding Tests
 In order to add new tests, you must create a test module for each module you want to test. These test
-modules must be created in the `tests` folder which is located in the `src` folder. When naming the 
+modules must be created in the `tests` folder which is located in the `src` folder. When naming the
 test modules, prefix the name of the module you want write tests for with `test_`, e.g. if you want
 to write tests for the `factories.py` module, then the test module should be called `test_factories.py`.
 
-When naming the test class use the CamelCase style and create the name by sufixing the name of 
+When naming the test class use the CamelCase style and create the name by sufixing the name of
 the class you want to test with `Test`, e.g. if you want to write tests for the `ModelFactory` class
 you should call the test class `ModelFactoryTest`.
 
-When naming the test methods use the snake_case style, e.g. `test_success()`. 
+When naming the test methods use the snake_case style, e.g. `test_success()`.
 
 
 ## Extending UI
@@ -115,7 +131,7 @@ The first step is to add the page handler which is the logic that handles reques
 for initializing the template engine and injecting the template with values has been abstracted away using
 the `AbstractPage` class which is located in the `src/ui/common.py` file. You must extend this class and
 implement the `handle_post_request()` and `handle_get_request()` methods. In order to inject template
-variables into the template of the page, you can use the `add_template_value()` method. It is recommended 
+variables into the template of the page, you can use the `add_template_value()` method. It is recommended
 that you study the source code of the `AbstractPage` class.
 
 ### Provide the Navigation
@@ -137,7 +153,7 @@ templates must extend the `base.html` template. For an example, see the `home.ht
 
 ### Add Page Route
 You must extend the application in the `main.py` with the route and page handler of your page.
-For instance, if we were to add the `/foo` route with `FooPage` as handler, we will extend the 
+For instance, if we were to add the `/foo` route with `FooPage` as handler, we will extend the
 application as follows:
 
 ```Python

@@ -1,18 +1,27 @@
 import unittest
-import models
 import datetime
+import models
 
+from google.appengine.ext import testbed
+from google.appengine.ext.ndb.blobstore import BlobKey
 from models.factories import ModelFactory
 
 
 class ModelFactoryTest(unittest.TestCase):
-    
+
+    def setUp(self):
+        self.testbed = testbed.Testbed()
+        self.testbed.activate()
+        self.testbed.init_datastore_v3_stub()
+        self.testbed.init_memcache_stub()
+
+    def tearDown(self):
+        self.testbed.deactivate()
 
     def test_create_training_journal(self):
         # create a journal
         journal = ModelFactory.create_training_journal()
         self.assertTrue(isinstance(journal, models.TrainingJournal))
-
 
     def test_create_user(self):
         # create a user
@@ -26,7 +35,6 @@ class ModelFactoryTest(unittest.TestCase):
         self.assertEqual(user.name, 'Iceman')
         self.assertEqual(user.email, 'if@kanafghan.com')
         self.assertEqual(user.training_journal, journal.key)
-
 
     def test_create_workout_session(self):
         # create a workout session
@@ -43,12 +51,11 @@ class ModelFactoryTest(unittest.TestCase):
         self.assertEqual(ws.ended_at, ended_at)
         self.assertEqual(ws.training_journal, journal.key)
 
-
     def test_create_workout(self):
         muscle = models.MuscleGroup.CHEST
         names = ['Bench Press', 'Barbell Bench Press']
         desc = 'description of how the workout is performed'
-        images = ['img1', 'img2']
+        images = [BlobKey('img1'), BlobKey('img2')]
         workout = ModelFactory.create_workout(muscle, names, desc, images)
 
         # the workout should be as expected
@@ -57,7 +64,6 @@ class ModelFactoryTest(unittest.TestCase):
         self.assertEqual(workout.names, names)
         self.assertEqual(workout.description, desc)
         self.assertEqual(workout.images, images)
-
 
     def test_create_workout_set(self):
         # create a workout set

@@ -31,7 +31,7 @@ class WorkoutsPage(blobstore_handlers.BlobstoreUploadHandler, AbstractPage):
 
         muscle_group = self.request.get('muscle-group')
         if muscle_group == '0':
-            self.add_message('You must select a Mucscle Group!')
+            self.add_message('You must select a Muscle Group!')
             return
 
         description = self.request.get('description', '')

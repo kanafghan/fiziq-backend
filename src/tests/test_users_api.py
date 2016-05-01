@@ -1,11 +1,23 @@
 import unittest
 import models
 
-from api.default.users import RegisterRequest, RegisterResponse, Users
 from google.appengine.ext import ndb
+from google.appengine.ext import testbed
+from api.default.users import RegisterRequest
+from api.default.users import RegisterResponse
+from api.default.users import Users
 
 
 class UsersApiTest(unittest.TestCase):
+
+    def setUp(self):
+        self.testbed = testbed.Testbed()
+        self.testbed.activate()
+        self.testbed.init_datastore_v3_stub()
+        self.testbed.init_memcache_stub()
+
+    def tearDown(self):
+        self.testbed.deactivate()
 
     def test_registration(self):
         # create the request
@@ -13,8 +25,8 @@ class UsersApiTest(unittest.TestCase):
         request.name = 'Ismail Faizi'
         request.email = 'kanafghan@gmail.com'
 
-        usersApi = Users()
-        response = usersApi.register(request)
+        users_api = Users()
+        response = users_api.register(request)
 
         self.assertTrue(None != response.user_key)
 
