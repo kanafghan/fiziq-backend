@@ -23,7 +23,7 @@ class ModelFactory(object):
         user.name = name
         user.email = email
         user.training_journal = training_journal.key
-        
+
         return user
 
 
@@ -48,7 +48,7 @@ class ModelFactory(object):
         workout_session.started_at = started_at
         workout_session.ended_at = ended_at
         workout_session.training_journal = training_journal.key
-        
+
         return workout_session
 
 
@@ -64,7 +64,7 @@ class ModelFactory(object):
         workout_set.weight = weight
         workout_set.workout_session = workout_session.key
         workout_set.workout = workout.key
-        
+
         return workout_set
 
 
@@ -80,5 +80,5 @@ class ModelFactory(object):
         workout.muscle_group = muscle_group
         workout.description = description
         workout.images = images
-        
+
         return workout

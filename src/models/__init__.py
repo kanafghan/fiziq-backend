@@ -16,6 +16,20 @@ WORKOUT_SET_KEY = ndb.Key("WorkoutSet", 'root', app=APPLICATION_ID)
 WORKOUT_KEY = ndb.Key("Workout", 'root', app=APPLICATION_ID)
 
 
+class AbstractModel(ndb.Model):
+
+    @classmethod
+    def get_by_urlsafe_key(cls, urlsafe_key):
+        try:
+            key = ndb.Key(urlsafe=urlsafe_key)
+
+            return key.get()
+        except:
+            pass  # Just ignore it
+
+        return None
+
+
 class MuscleGroup(object):
     """
     Enumeration that enumerates the 7 major muscle groups
@@ -39,7 +53,7 @@ class MuscleGroup(object):
         return ['CHEST', 'SHOULDERS', 'BACK', 'BICEPS', 'TRICEPS', 'LEGS', 'ABS']
 
 
-class User(ndb.Model):
+class User(AbstractModel):
     """
     Representation of a user
     """
@@ -68,7 +82,7 @@ class WorkoutSession(ndb.Model):
     ended_at = ndb.DateTimeProperty()
     training_journal = ndb.KeyProperty(kind='TrainingJournal')
 
-    
+
 class WorkoutSet(ndb.Model):
     """
     Representation of a workout set, i.e. repetitions
@@ -82,10 +96,11 @@ class WorkoutSet(ndb.Model):
 
 class Workout(ndb.Model):
     """
-    Representation of a physical exercise targetting one or 
+    Representation of a physical exercise targetting one or
     more muscle groups
     """
     names = ndb.StringProperty(repeated=True)
     muscle_group = ndb.IntegerProperty(choices=MuscleGroup.values(), required=True)
     description = ndb.StringProperty()
     images = ndb.BlobKeyProperty(repeated=True)
+    created_at = ndb.DateTimeProperty(auto_now_add=True)
